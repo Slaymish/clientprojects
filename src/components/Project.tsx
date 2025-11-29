@@ -9,15 +9,37 @@ export default function Project() {
 
     useEffect(() => {
         if (!id) return;
-        
-        fetch(`http://localhost:3001/projects/${id}`)
-        .then(response => response.json()) // convert to json
-        .then(data => setProject(data))
-        .catch(error => {
-            console.error('Error fetching project:', error);
-            setProject(null); // Fallback to null on error
-        });
-  }, [id]);
+
+        const controller = new AbortController();
+        const fetchProject = async () => {
+            const apiUrl = process.env.REACT_APP_API_URL;
+
+            try {
+                const response = await fetch(`${apiUrl}/projects/${id}`, { signal: controller.signal });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                if (!data) {
+                    throw new Error('No data found');
+                }
+                setProject(data);
+            } catch (error) {
+                if (error instanceof DOMException && error.name === 'AbortError') {
+                    // request was aborted, ignore
+                    return;
+                }
+                console.error('Error fetching project:', error);
+                setProject(null); // Fallback to null on error
+            }
+        };
+
+        fetchProject();
+
+        return () => {
+            controller.abort();
+        };
+    }, [id]);
 
   return (
     <div>

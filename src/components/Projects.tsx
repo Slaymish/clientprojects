@@ -5,28 +5,37 @@ import type { Project } from '../ProjectTypes';
 
 export default function Projects() {
     const [projects, setProjects] = useState<Project[]>([]);
+    const apiUrl = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
-        fetch('http://localhost:3001/projects')
-        .then(response => response.json()) // convert to json
-        .then(data => setProjects(data))
-        .catch(error => {
-            console.error('Error fetching projects:', error);
-            setProjects([]); // Fallback to empty array on error
-        });
-  }, []);
+        const fetchProjects = async () => {
+            try {
+                const response = await fetch(`${apiUrl}/projects`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setProjects(data);
+            } catch (error) {
+                console.error('Error fetching projects:', error);
+            }
+        };
+
+        fetchProjects();
+    }, [apiUrl]);
 
   return (
     <div>
       <h2>Projects</h2>
       <ul>
-        {projects.map((project: Project) => (
+        {projects.length === 0 && <li>No projects found.</li>}
+        {projects.map(project => (
             <li key={project.id}>
               <Link to={`/projects/${project.id}`}>
                 {project.name} ({project.clientName}) - {project.status}
               </Link>
             </li>
-            ))}
+        ))}
       </ul>
       <Link to="/projects/new">Create New Project</Link>
     </div>

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 export default function NewProject() {
     const navigate = useNavigate();
+    const apiUrl = process.env.REACT_APP_API_URL;
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -17,7 +18,7 @@ export default function NewProject() {
         };
 
         try {
-            const response = await fetch('http://localhost:3001/projects', {
+            const response = await fetch(`${apiUrl}/projects`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -40,13 +41,13 @@ export default function NewProject() {
             <h2>Create New Project</h2>
             <form onSubmit={handleSubmit}>
                 <label>Name</label>
-                <input type="text" name="name" required />
+                <input type="text" name="name" id="name" required />
                 <br />
                 <label>Client Name</label>
-                <input type="text" name="clientName" required />
+                <input type="text" name="clientName" id="clientName" required />
                 <br />
                 <label>Status</label>
-                <select name="status" required>
+                <select name="status" id="status" required>
                     <option value="planned">Planned</option>
                     <option value="in_progress">In Progress</option>
                     <option value="on_hold">On Hold</option>
@@ -54,10 +55,10 @@ export default function NewProject() {
                 </select>
                 <br />
                 <label>Description</label>
-                <textarea name="description" required></textarea>
+                <textarea name="description" id="description" required></textarea>
                 <br />
                 <label>Start Date</label>
-                <input type="date" name="startDate" required />
+                <input type="date" name="startDate" id="startDate" required />
                 <br />
                 <button type="submit">Create Project</button>
             </form>
