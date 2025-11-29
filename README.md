@@ -2,13 +2,13 @@
 
 - Created with `npx create-react-app clientprojects --template typescript`
 - Uses React Router for routing
-- Axios for HTTP requests
 
 ***
 
-- API URL is configured via environment variables (`.env` file`)
+- API URL is configured via environment variables (`.env` file)
 - Error handling is implemented for all API requests
 - Form validation is included for project creation 
+- Axios for HTTP requests
 
 
 ***
