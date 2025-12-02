@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { Project as ProjectType } from '../ProjectTypes';
+import type { ProjectStatus } from '../ProjectTypes';
 
 export default function NewProject() {
     const navigate = useNavigate();
@@ -9,13 +11,16 @@ export default function NewProject() {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         
-        const projectData = {
-            name: formData.get('name'),
-            clientName: formData.get('clientName'),
-            status: formData.get('status'),
-            description: formData.get('description'),
-            startDate: formData.get('startDate'),
+        const projectData: ProjectType = {
+            id: '', // ID will be assigned by the backend
+            name: formData.get('name') as string,
+            clientName: formData.get('clientName') as string,
+            status: formData.get('status') as ProjectStatus,
+            description: formData.get('description') as string,
+            startDate: formData.get('startDate') as string,
         };
+
+
 
         try {
             const response = await fetch(`${apiUrl}/projects`, {
@@ -25,6 +30,9 @@ export default function NewProject() {
                 },
                 body: JSON.stringify(projectData),
             });
+
+            console.log('Response status:', response.status);
+            console.log('Sending project data:', projectData);
 
             if (response.ok) {
                 navigate('/projects');

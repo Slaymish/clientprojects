@@ -6,6 +6,11 @@ import type { Project as ProjectType } from '../ProjectTypes';
 export default function Project() {
     const { id } = useParams<{ id: string }>();
     const [project, setProject] = useState<ProjectType | null>(null);
+    const [count,setCount] = useState(0);
+
+    function handleClick(){
+      setCount(count+1);
+    }
 
     useEffect(() => {
         if (!id) return;
@@ -50,6 +55,8 @@ export default function Project() {
           <p><strong>Status:</strong> {project.status}</p>
           <p><strong>Description:</strong> {project.description}</p>
           <p><strong>Start Date:</strong> {new Date(project.startDate).toLocaleDateString()}</p>
+          <p><strong>Count:</strong>{ count }</p>
+          <button onClick={handleClick}>Click!</button>
         </div>
       ) : (
         <p>Loading project details...</p>
